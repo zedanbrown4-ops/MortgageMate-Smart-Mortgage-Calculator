@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MortgageMate — Mortgage & Property Tax Calculator</title>
+<meta name="description" content="Estimate your monthly mortgage payment, property taxes, insurance, PMI and HOA costs with MortgageMate.">
+<style>
+:root{--ink:#172033;--muted:#667085;--bg:#f5f7fb;--card:#fff;--line:#e5e7eb;--accent:#2457d6;--accent2:#173b9b;--soft:#edf3ff;--good:#0f766e}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
+a{text-decoration:none;color:inherit}.wrap{max-width:1120px;margin:auto;padding:0 22px}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}.nav{height:68px;display:flex;align-items:center;justify-content:space-between}.brand{font-size:1.25rem;font-weight:850;letter-spacing:-.03em}.brand span{color:var(--accent)}nav{display:flex;gap:22px;color:var(--muted);font-size:.94rem}
+.hero{background:linear-gradient(135deg,#102454 0%,#2457d6 100%);color:white;padding:72px 0 62px}.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:.75rem;font-weight:800;opacity:.8}.hero h1{font-size:clamp(2.5rem,6vw,4.6rem);line-height:1.02;letter-spacing:-.055em;margin:12px 0 18px}.hero p{font-size:1.08rem;max-width:610px;opacity:.88}.hero-card{background:white;color:var(--ink);padding:24px;border-radius:20px;box-shadow:0 22px 55px #07153655}.mini-result{font-size:2.5rem;font-weight:900;margin:8px 0}.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mini-grid div{background:#f5f7fb;padding:12px;border-radius:12px}.section{padding:62px 0}.section h2{font-size:2rem;letter-spacing:-.035em;margin:0 0 10px}.section-intro{color:var(--muted);max-width:680px;margin:0 0 28px}
+.calculator{display:grid;grid-template-columns:.95fr 1.05fr;gap:20px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{font-weight:700;font-size:.9rem}input,select{width:100%;padding:12px 13px;border:1px solid #d6dae2;border-radius:10px;background:#fff;font-size:16px;color:var(--ink);outline:none}input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px #2457d61c}
+.result-card{background:var(--soft);border-color:#d7e3ff}.big{font-size:2.8rem;font-weight:900;letter-spacing:-.04em}.muted{color:var(--muted)}.rows{margin-top:18px}.row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}.bar{height:14px;background:#e6eaf1;border-radius:99px;overflow:hidden;display:flex;margin:18px 0}.bar i{display:block;height:100%}.bar .pi{background:#2457d6}.bar .tax{background:#6b7bd6}.bar .ins{background:#1b8c83}.bar .pmi{background:#e19b38}.bar .hoa{background:#9b59b6}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.feature{padding:22px;background:#fff;border:1px solid var(--line);border-radius:16px}.icon{font-size:1.5rem}.feature h3{margin:10px 0 5px}.feature p{color:var(--muted);margin:0}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}.amort{width:100%;border-collapse:collapse;min-width:650px}.amort th,.amort td{padding:11px 14px;text-align:right;border-bottom:1px solid var(--line)}.amort th{background:#f7f8fa;font-size:.82rem}.amort th:first-child,.amort td:first-child{text-align:left}
+.cta{background:#172033;color:white;border-radius:22px;padding:34px}.cta h2{margin:0 0 8px}.cta p{color:#cbd3e2}.button{display:inline-block;background:white;color:#172033;font-weight:800;padding:12px 18px;border-radius:10px}
+footer{padding:35px 0;color:var(--muted);font-size:.88rem}.disclaimer{font-size:.78rem;color:#7a8495;max-width:850px}
+@media(max-width:800px){nav{display:none}.hero{padding:52px 0}.hero-grid,.calculator{grid-template-columns:1fr}.features{grid-template-columns:1fr}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.hero-card{margin-top:5px}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><a class="brand" href="#">Mortgage<span>Mate</span></a><nav><a href="#calculator">Calculator</a><a href="#features">Features</a><a href="#amortization">Amortization</a></nav></div></header>
+
+<section class="hero">
+<div class="wrap hero-grid">
+<div>
+<div class="eyebrow">Mortgage planning made simple</div>
+<h1>Know what your home will really cost.</h1>
+<p>Estimate your monthly mortgage payment, property taxes, insurance, PMI and HOA fees in seconds — all in one clear calculation.</p>
+</div>
+<div class="hero-card">
+<div class="muted">Example monthly payment</div>
+<div class="mini-result" id="heroPayment">$2,275</div>
+<div class="mini-grid"><div><small class="muted">Principal + interest</small><br><strong id="heroPI">$1,769</strong></div><div><small class="muted">Taxes & other</small><br><strong id="heroOther">$506</strong></div></div>
+</div>
+</div>
+</section>
+
+<section class="section" id="calculator">
+<div class="wrap">
+<h2>Mortgage calculator</h2>
+<p class="section-intro">Adjust the numbers below to see an instant estimate. All calculations happen in your browser.</p>
+<div class="calculator">
+<div class="card">
+<h3>Loan details</h3>
+<div class="fields">
+<div class="field full"><label for="price">Home price</label><input id="price" type="number" value="350000" min="0" step="1000"></div>
+<div class="field"><label for="down">Down payment</label><input id="down" type="number" value="70000" min="0" step="1000"></div>
+<div class="field"><label for="rate">Interest rate (%)</label><input id="rate" type="number" value="6.5" min="0" max="30" step=".01"></div>
+<div class="field"><label for="term">Loan term</label><select id="term"><option>10</option><option>15</option><option>20</option><option>25</option><option selected>30</option><option>40</option></select></div>
+<div class="field"><label for="tax">Property tax (% / year)</label><input id="tax" type="number" value="1.2" min="0" max="20" step=".01"></div>
+</div>
+<h3 style="margin-top:26px">Other monthly costs</h3>
+<div class="fields">
+<div class="field"><label for="insurance">Insurance / year</label><input id="insurance" type="number" value="1800" min="0" step="50"></div>
+<div class="field"><label for="pmi">PMI (% / year)</label><input id="pmi" type="number" value=".5" min="0" max="10" step=".01"></div>
+<div class="field full"><label for="hoa">HOA / month</label><input id="hoa" type="number" value="0" min="0" step="10"></div>
+</div>
+</div>
+<div class="card result-card">
+<div class="muted">Estimated monthly payment</div>
+<div class="big" id="monthly">$0</div>
+<div class="muted" id="loanAmount">Loan amount: $0</div>
+<div class="bar"><i class="pi" id="b1"></i><i class="tax" id="b2"></i><i class="ins" id="b3"></i><i class="pmi" id="b4"></i><i class="hoa" id="b5"></i></div>
+<div class="rows">
+<div class="row"><span>Principal & interest</span><strong id="pi">$0</strong></div>
+<div class="row"><span>Property tax</span><strong id="taxM">$0</strong></div>
+<div class="row"><span>Home insurance</span><strong id="insM">$0</strong></div>
+<div class="row"><span>PMI</span><strong id="pmiM">$0</strong></div>
+<div class="row"><span>HOA</span><strong id="hoaM">$0</strong></div>
+<div class="row"><span>Total interest</span><strong id="interest">$0</strong></div>
+<div class="row"><span>Loan-to-value</span><strong id="ltv">0%</strong></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="section" id="features" style="padding-top:0">
+<div class="wrap">
+<h2>Everything you need to plan ahead</h2>
+<p class="section-intro">A straightforward calculator designed to help you understand the full monthly cost of home ownership.</p>
+<div class="features">
+<div class="feature"><div class="icon">🏠</div><h3>True monthly cost</h3><p>Combine principal, interest, taxes, insurance, PMI and HOA fees.</p></div>
+<div class="feature"><div class="icon">📊</div><h3>Clear breakdown</h3><p>See exactly where your monthly payment is going.</p></div>
+<div class="feature"><div class="icon">📅</div><h3>Amortization</h3><p>Review how your balance changes as you make payments.</p></div>
+</div>
+</div>
+</section>
+
+<section class="section" id="amortization" style="padding-top:0">
+<div class="wrap">
+<h2>First-year amortization</h2>
+<p class="section-intro">A preview of how each payment is divided between principal and interest.</p>
+<div class="table-wrap"><table class="amort"><thead><tr><th>Payment</th><th>Principal</th><th>Interest</th><th>Remaining balance</th></tr></thead><tbody id="schedule"></tbody></table></div>
+</div>
+</section>
+
+<section class="section" style="padding-top:0">
+<div class="wrap"><div class="cta"><h2>Plan with confidence.</h2><p>Use MortgageMate as a starting point when comparing homes, loan terms and monthly budgets.</p><a class="button" href="#calculator">Calculate again</a></div></div>
+</section>
+
+<footer><div class="wrap"><p>© 2026 MortgageMate. Built for educational and planning purposes.</p><p class="disclaimer">MortgageMate provides estimates only and is not a lender, tax adviser, financial adviser or insurance provider. Actual rates, taxes, insurance premiums, PMI requirements, fees and payment amounts vary by lender and location. Verify figures with qualified professionals before making financial decisions.</p></div></footer>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const ids=['price','down','rate','tax','insurance','pmi','hoa','term'];
+const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(isFinite(n)?n:0);
+function n(id){return Math.max(0,parseFloat($(id).value)||0)}
+function calculate(){
+ const price=n('price'),down=Math.min(n('down'),price),loan=price-down,rate=n('rate')/100/12,years=Math.max(1,parseInt($('term').value)||30),months=years*12;
+ const pi=rate===0?loan/months:loan*rate*Math.pow(1+rate,months)/(Math.pow(1+rate,months)-1);
+ const tax=price*n('tax')/100/12,ins=n('insurance')/12,pmi=loan*n('pmi')/100/12,hoa=n('hoa'),monthly=pi+tax+ins+pmi+hoa;
+ const totalInterest=Math.max(0,pi*months-loan),ltv=price?loan/price*100:0;
+ $('monthly').textContent=money(monthly);$('loanAmount').textContent='Loan amount: '+money(loan);
+ $('pi').textContent=money(pi);$('taxM').textContent=money(tax);$('insM').textContent=money(ins);$('pmiM').textContent=money(pmi);$('hoaM').textContent=money(hoa);$('interest').textContent=money(totalInterest);$('ltv').textContent=ltv.toFixed(1)+'%';
+ $('heroPayment').textContent=money(monthly);$('heroPI').textContent=money(pi);$('heroOther').textContent=money(monthly-pi);
+ const vals=[pi,tax,ins,pmi,hoa];vals.forEach((v,i)=>$('b'+(i+1)).style.width=(monthly?v/monthly*100:0)+'%');
+ let balance=loan,rows='';
+ for(let m=1;m<=12;m++){let interest=balance*rate,principal=Math.min(Math.max(0,pi-interest),balance);balance=Math.max(0,balance-principal);rows+=`<tr><td>${m}</td><td>${money(principal)}</td><td>${money(interest)}</td><td>${money(balance)}</td></tr>`}
+ $('schedule').innerHTML=rows;
+}
+ids.forEach(id=>$(id).addEventListener('input',calculate));
+calculate();
+})();
+</script>
+</body>
+</html>
